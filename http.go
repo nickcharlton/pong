@@ -30,6 +30,13 @@ func headers(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func logRequest(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
+		handler.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	http.HandleFunc("/ping", ping)
 	http.HandleFunc("/params", params)
@@ -50,5 +57,5 @@ func main() {
 	fmt.Println(file)
 	fmt.Printf("Listening on %s...\n", port)
 
-	http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":"+port, logRequest(http.DefaultServeMux))
 }
