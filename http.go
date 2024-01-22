@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+func hello(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "I am pong\n")
+}
+
 func ping(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "pong\n")
 }
@@ -38,6 +42,7 @@ func logRequest(handler http.Handler) http.Handler {
 }
 
 func main() {
+	http.HandleFunc("/", hello)
 	http.HandleFunc("/ping", ping)
 	http.HandleFunc("/params", params)
 	http.HandleFunc("/headers", headers)
